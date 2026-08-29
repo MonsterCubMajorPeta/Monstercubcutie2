@@ -1,0 +1,545 @@
+/* =========================================================================
+   CESSNA 172 SKYHAWK — REFERENCE SITE
+   Design language: aeronautical technical drawing / spec plate
+   ========================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  /* --- color tokens --- */
+  --paper:        #E8EDEF;   /* drafting-paper background, cool blue-grey */
+  --paper-line:   #C7D2D8;   /* faint grid lines on paper */
+  --panel:        #FFFFFF;   /* card / panel surface */
+  --ink:          #142B41;   /* primary text / linework, deep aviation navy */
+  --ink-soft:     #4A5E70;   /* secondary text, steel grey-blue */
+  --navy-deep:    #0B1F30;   /* header / footer surface */
+  --navy-mid:     #163A57;   /* borders on dark surface */
+  --amber:        #E2963A;   /* instrument amber accent */
+  --amber-dim:    #B9762A;
+  --rivet:        #9BAAB6;   /* rivet dots / dividers */
+  --ok-green:     #4C7A5E;   /* used sparingly, spec "in service" tag */
+
+  --font-display: 'Rajdhani', 'Arial Narrow', sans-serif;
+  --font-body:    'IBM Plex Sans', 'Segoe UI', sans-serif;
+  --font-mono:    'IBM Plex Mono', 'Courier New', monospace;
+
+  --max: 1180px;
+}
+
+*, *::before, *::after{ box-sizing: border-box; }
+
+html{ scroll-behavior: smooth; }
+
+body{
+  margin: 0;
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img, svg{ display:block; max-width:100%; }
+
+a{ color: inherit; }
+
+h1, h2, h3{
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  margin: 0 0 0.4em;
+}
+
+p{ margin: 0 0 1em; color: var(--ink-soft); }
+
+.wrap{
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+/* -------------------------------------------------------------------------
+   Corner tick marks — signature device borrowed from engineering drawing
+   sheets. Applied to any section with class "plate".
+   ------------------------------------------------------------------------- */
+.plate{
+  position: relative;
+  border: 1px solid var(--navy-mid);
+  background: var(--panel);
+}
+.plate::before, .plate::after,
+.plate .tick-br, .plate .tick-bl{
+  content:"";
+  position:absolute;
+  width:14px; height:14px;
+  border: 2px solid var(--amber);
+}
+.plate::before{ top:-1px; left:-1px; border-right:0; border-bottom:0; }
+.plate::after{ top:-1px; right:-1px; border-left:0; border-bottom:0; }
+.plate .tick-bl{ bottom:-1px; left:-1px; border-right:0; border-top:0; }
+.plate .tick-br{ bottom:-1px; right:-1px; border-left:0; border-top:0; }
+
+/* =========================================================================
+   HEADER  /  NAV  — "spec plate" bar referencing the wireframe layout
+   ========================================================================= */
+.site-header{
+  background: var(--navy-deep);
+  border-bottom: 3px solid var(--amber);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.header-inner{
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 16px 28px;
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-decoration:none;
+  color:#fff;
+  border: 1px solid var(--navy-mid);
+  padding: 8px 16px 8px 10px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
+}
+.brand svg{ width:34px; height:34px; flex:none; }
+.brand-text{ display:flex; flex-direction:column; line-height:1.1; }
+.brand-text .model{
+  font-family: var(--font-display);
+  font-weight:700;
+  font-size:1.15rem;
+  letter-spacing:0.04em;
+  color:#fff;
+}
+.brand-text .tag{
+  font-family: var(--font-mono);
+  font-size:0.62rem;
+  letter-spacing:0.14em;
+  color: var(--amber);
+  text-transform: uppercase;
+}
+
+.main-nav{
+  display:flex;
+  border: 1px solid var(--navy-mid);
+  border-radius: 4px;
+  overflow:hidden;
+  background: rgba(255,255,255,0.02);
+}
+.main-nav a{
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.92rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #C9D6E0;
+  text-decoration:none;
+  padding: 12px 18px;
+  border-right: 1px solid var(--navy-mid);
+  position:relative;
+  transition: color .15s ease, background .15s ease;
+  white-space:nowrap;
+}
+.main-nav a:last-child{ border-right:none; }
+.main-nav a:hover{ color:#fff; background: rgba(226,150,58,0.12); }
+.main-nav a.active{ color: var(--navy-deep); background: var(--amber); }
+.main-nav a.active::after{
+  content:"";
+  position:absolute; left:50%; bottom:4px;
+  width:4px; height:4px; background:var(--navy-deep);
+  transform:translateX(-50%);
+  border-radius:50%;
+}
+
+.nav-toggle{ display:none; }
+
+/* =========================================================================
+   HERO
+   ========================================================================= */
+.hero{
+  border-bottom: 1px solid var(--paper-line);
+  padding: 64px 0 56px;
+}
+.hero-inner{
+  display:grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 48px;
+  align-items:center;
+}
+.eyebrow{
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--amber-dim);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom: 14px;
+}
+.eyebrow::before{
+  content:"";
+  width: 22px; height: 1px;
+  background: var(--amber-dim);
+}
+.hero h1{
+  font-size: clamp(2.1rem, 4vw, 3.2rem);
+  line-height: 1.05;
+}
+.hero h1 span{ color: var(--amber-dim); }
+.hero .lede{ font-size: 1.05rem; max-width: 46ch; }
+
+.spec-strip{
+  display:flex;
+  gap: 0;
+  margin-top: 28px;
+  border: 1px solid var(--paper-line);
+  background: var(--panel);
+}
+.spec-strip div{
+  flex:1;
+  padding: 14px 16px;
+  border-right: 1px solid var(--paper-line);
+}
+.spec-strip div:last-child{ border-right:none; }
+.spec-strip .n{
+  font-family: var(--font-display);
+  font-weight:700;
+  font-size:1.35rem;
+  color: var(--ink);
+  display:block;
+}
+.spec-strip .l{
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.hero-figure{
+  padding: 18px;
+}
+.hero-figure img{ width:100%; height:auto; }
+.hero-figure .cap{
+  margin-top:10px;
+  font-family: var(--font-mono);
+  font-size:0.68rem;
+  letter-spacing:0.06em;
+  color: var(--ink-soft);
+  text-align:center;
+  text-transform:uppercase;
+}
+
+/* =========================================================================
+   PAGE HEADER (non-home pages)
+   ========================================================================= */
+.page-head{
+  padding: 46px 0 32px;
+  border-bottom: 1px solid var(--paper-line);
+}
+.page-head h1{ font-size: clamp(1.8rem, 3.4vw, 2.6rem); }
+.page-head .lede{ max-width: 62ch; font-size:1.02rem; }
+.breadcrumb{
+  font-family: var(--font-mono);
+  font-size:0.7rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+}
+.breadcrumb .amber{ color: var(--amber-dim); }
+
+/* =========================================================================
+   FEATURE ROWS  — the "image / description" pairing from the wireframe
+   ========================================================================= */
+.section{ padding: 56px 0; }
+.section.alt{ background: rgba(255,255,255,0.35); }
+
+.section-head{ margin-bottom: 34px; max-width: 70ch; }
+.section-head .kicker{
+  font-family: var(--font-mono);
+  font-size:0.7rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color: var(--amber-dim);
+}
+
+.feature-row{
+  display:grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 36px;
+  align-items: stretch;
+  margin-bottom: 40px;
+}
+.feature-row.reverse{ grid-template-columns: 0.85fr 1.15fr; }
+.feature-row.reverse .figure{ order:2; }
+.feature-row.reverse .copy{ order:1; }
+
+.figure{
+  padding: 26px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-height: 260px;
+}
+.figure svg{ width:100%; height:auto; }
+.figure .cap{
+  margin-top:14px;
+  font-family: var(--font-mono);
+  font-size:0.68rem;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color: var(--ink-soft);
+  border-top: 1px dashed var(--paper-line);
+  padding-top:10px;
+}
+
+.copy{
+  padding: 28px 30px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.copy .idx{
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--amber-dim);
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+.copy h3{ font-size: 1.4rem; margin-bottom: 0.5em; }
+.copy p:last-child{ margin-bottom: 0; }
+.copy ul{ margin: 10px 0 0; padding-left: 18px; color: var(--ink-soft); }
+.copy li{ margin-bottom: 6px; }
+
+/* =========================================================================
+   SPEC TABLE (aircraft info)
+   ========================================================================= */
+.spec-table-wrap{ padding: 4px; }
+table.spec-table{
+  width:100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+}
+table.spec-table caption{
+  text-align:left;
+  font-family: var(--font-display);
+  font-size:1.05rem;
+  font-weight:700;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--paper-line);
+}
+table.spec-table th, table.spec-table td{
+  text-align:left;
+  padding: 11px 18px;
+  border-bottom: 1px solid var(--paper-line);
+}
+table.spec-table th{
+  width: 46%;
+  color: var(--ink-soft);
+  font-weight:500;
+  text-transform:uppercase;
+  font-size:0.72rem;
+  letter-spacing:0.06em;
+}
+table.spec-table td{ color: var(--ink); font-weight:500; }
+table.spec-table tr:last-child th,
+table.spec-table tr:last-child td{ border-bottom:none; }
+table.spec-table tbody tr:hover{ background: rgba(226,150,58,0.06); }
+
+.spec-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+/* =========================================================================
+   TIMELINE  (aircraft history) — numbering justified: real chronology
+   ========================================================================= */
+.timeline{
+  position:relative;
+  margin-top: 10px;
+  padding-left: 6px;
+}
+.timeline::before{
+  content:"";
+  position:absolute;
+  left: 63px;
+  top: 6px; bottom: 6px;
+  width: 1px;
+  background: repeating-linear-gradient(var(--navy-mid) 0 6px, transparent 6px 11px);
+}
+.t-item{
+  display:grid;
+  grid-template-columns: 70px 40px 1fr;
+  gap: 0 18px;
+  margin-bottom: 30px;
+}
+.t-year{
+  font-family: var(--font-mono);
+  font-weight:500;
+  font-size:0.95rem;
+  color: var(--ink);
+  padding-top: 3px;
+  text-align:right;
+}
+.t-dot{
+  display:flex; justify-content:center;
+}
+.t-dot span{
+  width:12px; height:12px;
+  border-radius:50%;
+  background: var(--amber);
+  border: 2px solid var(--panel);
+  box-shadow: 0 0 0 1px var(--navy-mid);
+  margin-top:4px;
+}
+.t-body{
+  background: var(--panel);
+  border: 1px solid var(--paper-line);
+  padding: 14px 18px;
+}
+.t-body h4{
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  margin: 0 0 4px;
+}
+.t-body p{ margin:0; font-size:0.95rem; }
+
+/* =========================================================================
+   DOC LIST  (project doc page)
+   ========================================================================= */
+.doc-list{
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+.doc-card{
+  background: var(--panel);
+  border: 1px solid var(--paper-line);
+  padding: 20px 22px;
+  display:flex;
+  gap: 16px;
+}
+.doc-card .doc-icon{
+  flex:none;
+  width:42px; height:42px;
+  border:1px solid var(--navy-mid);
+  display:flex; align-items:center; justify-content:center;
+  color: var(--amber-dim);
+}
+.doc-card h4{
+  font-family: var(--font-display);
+  font-size:1.05rem;
+  margin:0 0 4px;
+}
+.doc-meta{
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing:0.05em;
+  text-transform:uppercase;
+  color: var(--ink-soft);
+  margin-top:8px;
+  display:block;
+}
+.doc-card p{ font-size:0.92rem; margin:0; }
+
+/* =========================================================================
+   CALLOUT / NOTE BLOCK
+   ========================================================================= */
+.callout{
+  border-left: 3px solid var(--amber);
+  background: var(--panel);
+  padding: 16px 20px;
+  font-family: var(--font-mono);
+  font-size: 0.86rem;
+  color: var(--ink-soft);
+  margin: 30px 0;
+}
+.callout strong{ color: var(--ink); }
+
+/* =========================================================================
+   FOOTER
+   ========================================================================= */
+.site-footer{
+  background: var(--navy-deep);
+  color: #A9B8C4;
+  margin-top: 60px;
+  border-top: 3px solid var(--amber);
+}
+.footer-inner{
+  max-width: var(--max);
+  margin:0 auto;
+  padding: 34px 28px;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap: 24px;
+  flex-wrap:wrap;
+}
+.footer-inner .fbrand{
+  font-family: var(--font-display);
+  color:#fff;
+  font-weight:700;
+  letter-spacing:0.04em;
+}
+.footer-inner .fmeta{
+  font-family: var(--font-mono);
+  font-size:0.72rem;
+  letter-spacing:0.05em;
+  color: #7E92A2;
+  margin-top:6px;
+}
+.footer-links{
+  display:flex; gap:22px; flex-wrap:wrap;
+  font-family: var(--font-mono);
+  font-size:0.75rem;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+}
+.footer-links a{ text-decoration:none; color:#C9D6E0; }
+.footer-links a:hover{ color: var(--amber); }
+
+/* =========================================================================
+   RESPONSIVE
+   ========================================================================= */
+@media (max-width: 880px){
+  .hero-inner{ grid-template-columns: 1fr; }
+  .feature-row, .feature-row.reverse{ grid-template-columns: 1fr; }
+  .feature-row.reverse .figure, .feature-row.reverse .copy{ order:0; }
+  .spec-grid{ grid-template-columns: 1fr; }
+  .doc-list{ grid-template-columns: 1fr; }
+  .spec-strip{ flex-wrap:wrap; }
+  .spec-strip div{ flex: 1 1 50%; border-bottom: 1px solid var(--paper-line); }
+}
+
+@media (max-width: 700px){
+  .header-inner{ flex-direction:column; align-items:stretch; }
+  .main-nav{ flex-wrap:wrap; }
+  .main-nav a{ flex:1 1 auto; text-align:center; border-bottom:1px solid var(--navy-mid); }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+  *{ transition:none !important; }
+}
+
+/* Visible keyboard focus */
+a:focus-visible, button:focus-visible{
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
