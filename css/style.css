@@ -377,7 +377,7 @@ table.spec-table tbody tr:hover{ background: rgba(226,150,58,0.06); }
 .timeline::before{
   content:"";
   position:absolute;
-  left: 63px;
+  left: 57px;
   top: 6px; bottom: 6px;
   width: 1px;
   background: repeating-linear-gradient(var(--navy-mid) 0 6px, transparent 6px 11px);
