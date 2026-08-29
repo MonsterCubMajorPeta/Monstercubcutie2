@@ -433,6 +433,7 @@ table.spec-table tbody tr:hover{ background: rgba(226,150,58,0.06); }
   padding: 20px 22px;
   display:flex;
   gap: 16px;
+  align-items: center;
 }
 .doc-card .doc-icon{
   flex:none;
